@@ -42,6 +42,7 @@
     <Compile Include="BlockGenerator.cs" />
     <Compile Include="BlockHash.cs" />
     <Compile Include="Board.cs" />
+    <Compile Include="Pixel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

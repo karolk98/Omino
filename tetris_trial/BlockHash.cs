@@ -11,18 +11,18 @@ namespace tetris_trial
         public BlockHash(Block block)
         {
             Block tempBlock = block;
-            List<int> tempHash = FlattenList(block.Coords);
+            List<int> tempHash = FlattenList(block.Pixels);
             for (int i = 0; i < 3; i++)
             {
                 tempBlock = tempBlock.GetRotated();
-                List<int> nextHash = FlattenList(tempBlock.Coords);
+                List<int> nextHash = FlattenList(tempBlock.Pixels);
                 if (Compare(tempHash, nextHash) < 0)
                 {
                     tempHash = nextHash;
                 }
             }
 
-            this.hash = tempHash;
+            hash = tempHash;
         }
 
         private static int Compare(List<int> hash1, List<int> hash2)
@@ -36,13 +36,13 @@ namespace tetris_trial
             return 0;
         }
 
-        private static List<int> FlattenList(List<Tuple<int, int>> coords)
+        private static List<int> FlattenList(List<Pixel> coords)
         {
             List<int> list = new List<int>();
             foreach (var coord in coords)
             {
-                list.Add(coord.Item1);
-                list.Add(coord.Item2);
+                list.Add(coord.X);
+                list.Add(coord.Y);
             }
 
             return list;

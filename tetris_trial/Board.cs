@@ -10,8 +10,8 @@ namespace tetris_trial
 
         public List<Block> Square()
         {
-            for (int i = (int)Math.Ceiling(Math.Sqrt(Blocks.Count * Blocks.First().Coords.Count)); i < Blocks.Count *
-                                                                                      Blocks.First().Coords.Count;i++)
+            for (int i = (int)Math.Ceiling(Math.Sqrt(Blocks.Count * Blocks.First().Pixels.Count)); i < Blocks.Count *
+                                                                                      Blocks.First().Pixels.Count;i++)
             {
                 var tab = new int[i,i];
                 for(int a=0;a<i;a++)
@@ -70,17 +70,17 @@ namespace tetris_trial
 
         public bool Insert(int[,] tab, Block block, int i, int j, int level)
         {
-            foreach (var pixel in block.Coords)
+            foreach (var pixel in block.Pixels)
             {
-                if (tab[pixel.Item1+i, pixel.Item2+j] != -1)
+                if (tab[pixel.X+i, pixel.Y+j] != -1)
                 {
                     return false;
                 }
             }
 
-            foreach (var pixel in block.Coords)
+            foreach (var pixel in block.Pixels)
             {
-                tab[pixel.Item1+i, pixel.Item2+j] = level;
+                tab[pixel.X+i, pixel.Y+j] = level;
             }
 
             return true;
@@ -88,9 +88,9 @@ namespace tetris_trial
         
         public void Erase(int[,] tab, Block block, int i, int j)
         {
-            foreach (var pixel in block.Coords)
+            foreach (var pixel in block.Pixels)
             {
-                tab[pixel.Item1+i, pixel.Item2+j] = -1;
+                tab[pixel.X+i, pixel.Y+j] = -1;
             }
         }
 
