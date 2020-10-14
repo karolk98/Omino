@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace tetris_trial
 {
-    public class BlockHash
+    public class BlockHash : IComparable<BlockHash>
     {
         private List<int> hash;
 
@@ -25,8 +25,9 @@ namespace tetris_trial
             hash = tempHash;
         }
 
-        private static int Compare(List<int> hash1, List<int> hash2)
+        public static int Compare(List<int> hash1, List<int> hash2)
         {
+            if (hash1.Count != hash2.Count) return hash1.Count - hash2.Count;
             for (int i = 0; i < hash1.Count; i++)
             {
                 if(hash1[i] == hash2[i]) continue;
@@ -66,6 +67,11 @@ namespace tetris_trial
             }
 
             return hc;
+        }
+
+        public int CompareTo(BlockHash other)
+        {
+            return Compare(this.hash, other.hash);
         }
     }
 }

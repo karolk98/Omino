@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace tetris_trial
 {
@@ -8,8 +9,8 @@ namespace tetris_trial
         public static void Main(string[] args)
         {
                 Console.WriteLine(321);
-                var gen = new BlockGenerator(6, 321);
-//                var board = new Board();
+                var gen = new BlockGenerator(4, 320);
+                //                var board = new Board();
 //                board.Blocks = gen.GenerateBlocks(6);
 //                board.Square();
                 var b = gen.GenerateBlock();
@@ -17,11 +18,26 @@ namespace tetris_trial
                 var c = new Cut(new Pixel(0,1), new Pixel(1,1) );
                 var c2 = new Cut(new Pixel(1,1),new Pixel(0,1) );
                 var l = new List<Cut>() {c};
+                var sq = new Block(new List<Pixel>
+                {
+                    new Pixel(),
+                    new Pixel(0,1),
+                    new Pixel(1,0),
+                    new Pixel(1,1),
+                });
                 b.Split(l, out b1, out b2);
-                Console.WriteLine(b);
-                Console.WriteLine(b1);
-                Console.WriteLine(b2);
-                Console.WriteLine(c2!=c);
+                var l2 = b.Split(l);
+                
+                Console.WriteLine(sq);
+                for (int i = 0; i <= 4; i++)
+                {
+                    Console.WriteLine(sq.GetAllCombinationForNumberOfCuts(i).Count);
+                }
+                
+                var lista = new List<Block>{sq};
+                var board = new Board();
+                board.Blocks = gen.GenerateBlocks(3);;
+                board.Rectangle();
         }
     }
 }
