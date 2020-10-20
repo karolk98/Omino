@@ -9,10 +9,7 @@ namespace tetris_trial
         public static void Main(string[] args)
         {
                 Console.WriteLine(321);
-                var gen = new BlockGenerator(4, 320);
-                //                var board = new Board();
-//                board.Blocks = gen.GenerateBlocks(6);
-//                board.Square();
+                var gen = new IncrementalBlockSetGenerator(8, 320);
                 var b = gen.GenerateBlock();
                 Block b1, b2;
                 var c = new Cut(new Pixel(0,1), new Pixel(1,1) );

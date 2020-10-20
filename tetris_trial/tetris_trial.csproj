@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="Block.cs" />
     <Compile Include="BlockGenerator.cs" />
+    <Compile Include="IncrementalBlockSetGenerator.cs"/>
     <Compile Include="BlockHash.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="Pixel.cs" />

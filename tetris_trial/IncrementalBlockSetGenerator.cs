@@ -38,6 +38,7 @@ namespace tetris_trial
         {
             _random = new Random(seed);
             List<Block> list = INITIAL;
+            List<Tuple<int, int>> moves = new List<Tuple<int, int>>{Tuple.Create(1,0), Tuple.Create(-1,0), Tuple.Create(0,1), Tuple.Create(0,-1)};
             for (int i = 0; i < size - 1; i++)
             {
                 var blockSet = new Dictionary<BlockHash, Block>();
@@ -45,41 +46,17 @@ namespace tetris_trial
                 {
                     foreach (var pixel in block.Pixels)
                     {
-                        if (!block.Pixels.Contains(new Pixel(pixel.X+1, pixel.Y)))
+                        foreach (var move in moves)
                         {
-                            var l = new List<Pixel>(block.Pixels)
+                            if (!block.Pixels.Contains(new Pixel(pixel.X+move.Item1, pixel.Y+move.Item2)))
                             {
-                                new Pixel(pixel.X+1, pixel.Y)
-                            };
-                            Block b = new Block(l);
-                            blockSet[b.GetHash()] = b;
-                        }
-                        if (!block.Pixels.Contains(new Pixel(pixel.X-1, pixel.Y)))
-                        {
-                            var l = new List<Pixel>(block.Pixels)
-                            {
-                                new Pixel(pixel.X-1, pixel.Y)
-                            };
-                            Block b = new Block(l);
-                            blockSet[b.GetHash()] = b;
-                        }
-                        if (!block.Pixels.Contains(new Pixel(pixel.X, pixel.Y+1)))
-                        {
-                            var l = new List<Pixel>(block.Pixels)
-                            {
-                                new Pixel(pixel.X, pixel.Y+1)
-                            };
-                            Block b = new Block(l);
-                            blockSet[b.GetHash()] = b;
-                        }
-                        if (!block.Pixels.Contains(new Pixel(pixel.X, pixel.Y-1)))
-                        {
-                            var l = new List<Pixel>(block.Pixels)
-                            {
-                                new Pixel(pixel.X, pixel.Y-1)
-                            };
-                            Block b = new Block(l);
-                            blockSet[b.GetHash()] = b;
+                                var l = new List<Pixel>(block.Pixels)
+                                {
+                                    new Pixel(pixel.X+move.Item1, pixel.Y+move.Item2)
+                                };
+                                Block b = new Block(l);
+                                blockSet[b.GetHash()] = b;
+                            }
                         }
                     }
                 }
