@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.PerformanceData;
 using System.Linq;
 using System.Text;
 
@@ -82,6 +83,28 @@ namespace tetris_trial
             }
 
             return new Block(coords);
+        }
+
+        private List<Block> rotations;
+        public List<Block> GetRotations()
+        {
+            if (rotations != null) return rotations;
+            rotations = new List<Block>(){this};
+            Block temp = this;
+            for (int i = 0; i < 3; i++)
+            {
+                temp = temp.GetRotated();
+                if (rotations.Any(rotation =>
+                {
+                    return !rotation.Pixels.Where((t, j) => t != temp.Pixels[j]).Any();
+                }))
+                {
+                    continue;
+                }
+                rotations.Add(temp);
+            }
+
+            return rotations;
         }
 
         private BlockHash _hash;

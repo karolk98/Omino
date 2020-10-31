@@ -47,27 +47,19 @@ namespace tetris_trial
                 return true;
             }
 
-            Block block = Blocks[level];
-            for (int r = 0; r < 4; r++)
+            foreach (var rotation in Blocks[level].GetRotations())
             {
-                for (int i = 0; i < tab.GetLength(0) - block.Width + 1; i++)
+                for (int i = 0; i < tab.GetLength(0) - rotation.Width + 1; i++)
                 {
-                    for (int j = 0; j < tab.GetLength(0) - block.Height + 1; j++)
+                    for (int j = 0; j < tab.GetLength(0) - rotation.Height + 1; j++)
                     {
-                        if (tab[i, j] != -1)
-                        {
-                            continue;
-                        }
-
-                        if (!Insert(tab, block, i, j, level)) continue;
+                        if (!Insert(tab, rotation, i, j, level)) continue;
 
                         if (SquareRec(tab, level + 1))
                             return true;
-                        Erase(tab, block, i, j);
+                        Erase(tab, rotation, i, j);
                     }
                 }
-
-                block = block.GetRotated();
             }
 
             return false;
@@ -211,27 +203,24 @@ namespace tetris_trial
                 return true;
             }
 
-            Block block = Blocks[level];
-            for (int r = 0; r < 4; r++)
+            foreach (var rotation in Blocks[level].GetRotations())
             {
-                for (int i = 0; i < tab.GetLength(0) - block.Width + 1; i++)
+                for (int i = 0; i < tab.GetLength(0) - rotation.Width + 1; i++)
                 {
-                    for (int j = 0; j < tab.GetLength(1) - block.Height + 1; j++)
+                    for (int j = 0; j < tab.GetLength(1) - rotation.Height + 1; j++)
                     {
                         if (tab[i, j] != -1)
                         {
                             continue;
                         }
 
-                        if (!Insert(tab, block, i, j, level)) continue;
+                        if (!Insert(tab, rotation, i, j, level)) continue;
 
                         if (RecRecRecRectangle(tab, Blocks,level + 1))
                             return true;
-                        Erase(tab, block, i, j);
+                        Erase(tab, rotation, i, j);
                     }
                 }
-
-                block = block.GetRotated();
             }
 
             return false;
