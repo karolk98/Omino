@@ -257,13 +257,13 @@ namespace tetris_trial
 
         public List<List<Block>> GetAllCombinationForNumberOfCuts(int cuts)
         {
-            if(cachedCuttedBlocks == null) EjaculateCutBlocks();
+            if(cachedCuttedBlocks == null) CalculateCutBlocks();
             if (cuts >= cachedCuttedBlocks.Count)
                 return null;
             return cachedCuttedBlocks[cuts];
         }
 
-        private void EjaculateCutBlocks()
+        private void CalculateCutBlocks()
         {
             cachedCuttedBlocks = new List<List<List<Block>>>();
             List<Cut> possibleCuts = AllPossibleCuts();
