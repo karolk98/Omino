@@ -177,22 +177,73 @@ namespace tetris_trial
         
         public void FastRectangle()
         {
-            int y;
             if (Blocks is null || Blocks.Count == 0)
                 return;
             int area = Blocks.Sum(pp => pp.Pixels.Count);
-            FindEdges(area, out var x, out y);
+            FindEdges(area, out var x, out var y);
             int[,] tab = new int[x,y];
             for (int a = 0; a < x; a++)
             for (int b = 0; b < y; b++)
                 tab[a, b] = -1;
             int cuts = 0;
-            while (true)
+            int placed = 0;
+            List<Block> notFitting = new List<Block>();
+            foreach (var block in Blocks)
             {
-                int[] cutsDistribution = new int[Blocks.Count];
-                if (RecRectangle(cutsDistribution, 0, cuts, tab))
-                    break;
-                cuts++;
+                foreach (var rotation in block.GetRotations())
+                {
+                    for (int a = 0; a < tab.GetLength(0) - rotation.Width + 1; a++)
+                    {
+                        for (int b = 0; b < tab.GetLength(1) - rotation.Height + 1; b++)
+                        {
+                            if (Insert(tab, rotation, a, b, placed))
+                            {
+                                placed++;
+                                goto next_block;
+                            }
+                        }
+                    }
+                }
+                notFitting.Add(block);
+                next_block: ;
+            }
+
+            foreach (var block in notFitting)
+            {
+                int localCuts = block.AllPossibleCuts().Count;
+                cuts += localCuts;
+                for (int i = 0; i < block.Pixels.Count; i++)
+                {
+                    for (int a = 0; a < tab.GetLength(0); a++)
+                    {
+                        for (int b = 0; b < tab.GetLength(1); b++)
+                        {
+                            if (tab[a, b] == -1)
+                            {
+                                tab[a, b] = placed;
+                                goto next_piece;
+                            }
+                        }
+                    }
+                    next_piece: ;
+                }
+
+                placed++;
+            }
+            
+            
+            Console.WriteLine("Found solution! cuts:" + cuts);
+            for (int a = 0; a < tab.GetLength(0); a++)
+            {
+                for (int b = 0; b < tab.GetLength(1); b++)
+                    if (tab[a, b] != -1)
+                        Console.Write(tab[a, b]);
+                    else
+                    {
+                        Console.Write("x");
+                    }
+
+                Console.WriteLine();
             }
         }
         
