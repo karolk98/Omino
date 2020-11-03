@@ -173,6 +173,14 @@ namespace tetris_trial
             for (int a = 0; a < x; a++)
             for (int b = 0; b < y; b++)
                 tab[a, b] = -1;
+            int cuts = 0;
+            while (true)
+            {
+                int[] cutsDistribution = new int[Blocks.Count];
+                if (RecRectangle(cutsDistribution, 0, cuts, tab))
+                    break;
+                cuts++;
+            }
         }
         
         public void FastRectangle()
