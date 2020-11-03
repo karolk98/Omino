@@ -8,6 +8,60 @@ namespace tetris_trial
     {
         public List<Block> Blocks;
 
+        public void FastSquare()
+        {
+            for (int i = (int) Math.Ceiling(Math.Sqrt(Blocks.Count * Blocks.First().Pixels.Count));
+                i < Blocks.Count * Blocks.First().Pixels.Count;
+                i++)
+            {
+                var tab = new int[i, i];
+                for (int a = 0; a < i; a++)
+                for (int b = 0; b < i; b++)
+                    tab[a, b] = -1;
+
+                int placed = 0;
+                for (var index = 0; index < Blocks.Count; index++)
+                {
+                    var block = Blocks[index];
+                    foreach (var rotation in block.GetRotations())
+                    {
+                        for (int a = 0; a < tab.GetLength(0) - rotation.Width + 1; a++)
+                        {
+                            for (int b = 0; b < tab.GetLength(0) - rotation.Height + 1; b++)
+                            {
+                                if (Insert(tab, rotation, a, b, index))
+                                {
+                                    placed++;
+                                    goto next_block;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                    next_block: ;
+                }
+
+                if (placed == Blocks.Count)
+                {
+                    Console.WriteLine("Found solution! dim:" + tab.GetLength(0));
+                    for (int a = 0; a < tab.GetLength(0); a++)
+                    {
+                        for (int b = 0; b < tab.GetLength(0); b++)
+                            if (tab[a, b] != -1)
+                                Console.Write(tab[a, b]);
+                            else
+                            {
+                                Console.Write("x");
+                            }
+
+                        Console.WriteLine();
+                    }
+                    break;
+                }
+            }
+
+        }
+        
         public List<Block> Square()
         {
             for (int i = (int) Math.Ceiling(Math.Sqrt(Blocks.Count * Blocks.First().Pixels.Count));
@@ -115,6 +169,19 @@ namespace tetris_trial
                 return;
             int area = Blocks.Sum(pp => pp.Pixels.Count);
             FindEdges(area, out x, out y);
+            int[,] tab = new int[x,y];
+            for (int a = 0; a < x; a++)
+            for (int b = 0; b < y; b++)
+                tab[a, b] = -1;
+        }
+        
+        public void FastRectangle()
+        {
+            int y;
+            if (Blocks is null || Blocks.Count == 0)
+                return;
+            int area = Blocks.Sum(pp => pp.Pixels.Count);
+            FindEdges(area, out var x, out y);
             int[,] tab = new int[x,y];
             for (int a = 0; a < x; a++)
             for (int b = 0; b < y; b++)
