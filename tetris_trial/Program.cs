@@ -1,4 +1,6 @@
-﻿namespace tetris_trial
+﻿using System;
+
+namespace tetris_trial
 {
     internal class Program
     {
@@ -6,8 +8,8 @@
         {
             IncrementalBlockSetGenerator blockSetGenerator = new IncrementalBlockSetGenerator(4, 5);
             Board board = new Board();
-            board.Blocks = blockSetGenerator.GenerateBlocks(9);
-            board.Square();
+            board.Blocks = blockSetGenerator.GenerateBlocks(8);
+            Console.WriteLine(board.Rectangle());
         }
     }
 }

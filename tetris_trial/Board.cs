@@ -8,7 +8,7 @@ namespace tetris_trial
     {
         public List<Block> Blocks;
 
-        public void FastSquare()
+        public int[,] FastSquare()
         {
             for (int i = (int) Math.Ceiling(Math.Sqrt(Blocks.Count * Blocks.First().Pixels.Count));
                 i < Blocks.Count * Blocks.First().Pixels.Count;
@@ -43,26 +43,15 @@ namespace tetris_trial
 
                 if (placed == Blocks.Count)
                 {
-                    Console.WriteLine("Found solution! dim:" + tab.GetLength(0));
-                    for (int a = 0; a < tab.GetLength(0); a++)
-                    {
-                        for (int b = 0; b < tab.GetLength(0); b++)
-                            if (tab[a, b] != -1)
-                                Console.Write(tab[a, b]);
-                            else
-                            {
-                                Console.Write("x");
-                            }
-
-                        Console.WriteLine();
-                    }
-                    break;
+                    PrintSolution(tab, tab.GetLength(0));
+                    return tab;
                 }
             }
 
+            return null;
         }
         
-        public List<Block> Square()
+        public int[,] Square()
         {
             for (int i = (int) Math.Ceiling(Math.Sqrt(Blocks.Count * Blocks.First().Pixels.Count));
                 i < Blocks.Count *
@@ -74,7 +63,7 @@ namespace tetris_trial
                 for (int b = 0; b < i; b++)
                     tab[a, b] = -1;
                 if (SquareRec(tab, 0))
-                    break;
+                    return tab;
             }
 
             return null;
@@ -84,20 +73,7 @@ namespace tetris_trial
         {
             if (level == Blocks.Count)
             {
-                Console.WriteLine("Found solution! dim:" + tab.GetLength(0));
-                for (int a = 0; a < tab.GetLength(0); a++)
-                {
-                    for (int b = 0; b < tab.GetLength(0); b++)
-                        if (tab[a, b] != -1)
-                            Console.Write(tab[a, b]);
-                        else
-                        {
-                            Console.Write("x");
-                        }
-
-                    Console.WriteLine();
-                }
-
+                PrintSolution(tab, tab.GetLength(0));
                 return true;
             }
 
@@ -119,7 +95,7 @@ namespace tetris_trial
             return false;
         }
 
-        public bool Insert(int[,] tab, Block block, int i, int j, int level)
+        private bool Insert(int[,] tab, Block block, int i, int j, int level)
         {
             foreach (var pixel in block.Pixels)
             {
@@ -137,7 +113,7 @@ namespace tetris_trial
             return true;
         }
 
-        public void Erase(int[,] tab, Block block, int i, int j)
+        private void Erase(int[,] tab, Block block, int i, int j)
         {
             foreach (var pixel in block.Pixels)
             {
@@ -145,7 +121,7 @@ namespace tetris_trial
             }
         }
 
-        public void FindEdges(int area, out int x, out int y)
+        private void FindEdges(int area, out int x, out int y)
         {
             for (int i = (int) Math.Sqrt(area); i > 0; i--)
             {
@@ -162,11 +138,11 @@ namespace tetris_trial
             y = -1;
         }
 
-        public void Rectangle()
+        public Tuple<int[,], int> Rectangle()
         {
             int x, y;
             if (Blocks is null || Blocks.Count == 0)
-                return;
+                return null;
             int area = Blocks.Sum(pp => pp.Pixels.Count);
             FindEdges(area, out x, out y);
             int[,] tab = new int[x,y];
@@ -178,15 +154,15 @@ namespace tetris_trial
             {
                 int[] cutsDistribution = new int[Blocks.Count];
                 if (RecRectangle(cutsDistribution, 0, cuts, tab))
-                    break;
+                    return new Tuple<int[,], int>(tab, cuts);
                 cuts++;
             }
         }
         
-        public void FastRectangle()
+        public Tuple<int[,], int> FastRectangle()
         {
             if (Blocks is null || Blocks.Count == 0)
-                return;
+                return null;
             int area = Blocks.Sum(pp => pp.Pixels.Count);
             FindEdges(area, out var x, out var y);
             int[,] tab = new int[x,y];
@@ -239,20 +215,8 @@ namespace tetris_trial
                 placed++;
             }
             
-            
-            Console.WriteLine("Found solution! cuts:" + cuts);
-            for (int a = 0; a < tab.GetLength(0); a++)
-            {
-                for (int b = 0; b < tab.GetLength(1); b++)
-                    if (tab[a, b] != -1)
-                        Console.Write(tab[a, b]);
-                    else
-                    {
-                        Console.Write("x");
-                    }
-
-                Console.WriteLine();
-            }
+            PrintSolution(tab, cuts);
+            return new Tuple<int[,], int>(tab, cuts);
         }
         
         private bool RecRectangle(int[] cutsDistribution, int level, int cuts, int[,] tab)
@@ -270,7 +234,6 @@ namespace tetris_trial
                 cutsDistribution[level] += i;
                 if (RecRectangle(cutsDistribution, level + 1, cuts - i, tab))
                 {
-                    found = true;
                     return true;
                 }
 
@@ -290,14 +253,14 @@ namespace tetris_trial
             bool found=false;
 
             var combinations = Blocks[level].GetAllCombinationForNumberOfCuts(cutsDistribution[level]);
-            if(!(combinations is null))
-                foreach (var option in combinations)
-                {
-                    l.AddRange(option);
-                    if (RecRecRectangle(l, level + 1, cutsDistribution, tab))
-                        found = true;
-                    l.RemoveRange(l.Count-option.Count,option.Count);
-                }
+            if (combinations is null) return false;
+            foreach (var option in combinations)
+            {
+                l.AddRange(option);
+                if (RecRecRectangle(l, level + 1, cutsDistribution, tab))
+                    found = true;
+                l.RemoveRange(l.Count-option.Count,option.Count);
+            }
 
             return found;
         }
@@ -306,26 +269,7 @@ namespace tetris_trial
         {
             if (level == Blocks.Count)
             {
-                Console.WriteLine("Found solution! dim:" + tab.GetLength(0));
-                for (int a = 0; a < tab.GetLength(0); a++)
-                {
-                    for (int b = 0; b < tab.GetLength(1); b++)
-                        if (tab[a, b] != -1)
-                            Console.Write(tab[a, b]);
-                        else
-                        {
-                            Console.Write("x");
-                        }
-
-                    Console.WriteLine();
-                }
-                
-                for (int a = 0; a < tab.GetLength(0); a++)
-                {
-                    for (int b = 0; b < tab.GetLength(1); b++)
-                        tab[a, b] = -1;
-                }
-
+                PrintSolution(tab, 0);
                 return true;
             }
 
@@ -350,6 +294,20 @@ namespace tetris_trial
             }
 
             return false;
+        }
+        public static void PrintSolution(int[,] board, int score) 
+        {
+            Console.WriteLine("Found solution! score:" + score);
+            for (int a = 0; a < board.GetLength(0); a++)
+            {
+                for (int b = 0; b < board.GetLength(1); b++)
+                    if (board[a, b] != -1)
+                        Console.Write(board[a, b]);
+                    else
+                        Console.Write("x");
+                
+                Console.WriteLine();
+            }
         }
     }
 }

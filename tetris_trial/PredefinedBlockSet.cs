@@ -76,7 +76,7 @@ namespace tetris_trial
 
         public Block Get(int index)
         {
-            if (index > blockSet.Count) throw new ArgumentException("Unsupported block");
+            if (index >= blockSet.Count) throw new ArgumentException("Unsupported block");
             return blockSet[index];
         }
     }
