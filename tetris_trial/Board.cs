@@ -43,7 +43,7 @@ namespace tetris_trial
 
                 if (placed == Blocks.Count)
                 {
-                    PrintSolution(tab, tab.GetLength(0));
+                    PrintSolution(tab);
                     return tab;
                 }
             }
@@ -73,7 +73,7 @@ namespace tetris_trial
         {
             if (level == Blocks.Count)
             {
-                PrintSolution(tab, tab.GetLength(0));
+                PrintSolution(tab);
                 return true;
             }
 
@@ -215,7 +215,7 @@ namespace tetris_trial
                 placed++;
             }
             
-            PrintSolution(tab, cuts);
+            PrintSolution(tab);
             return new Tuple<int[,], int>(tab, cuts);
         }
         
@@ -269,7 +269,7 @@ namespace tetris_trial
         {
             if (level == Blocks.Count)
             {
-                PrintSolution(tab, 0);
+                PrintSolution(tab);
                 return true;
             }
 
@@ -295,9 +295,8 @@ namespace tetris_trial
 
             return false;
         }
-        public static void PrintSolution(int[,] board, int score) 
+        public static void PrintSolution(int[,] board) 
         {
-            Console.WriteLine("Found solution! score:" + score);
             for (int a = 0; a < board.GetLength(0); a++)
             {
                 for (int b = 0; b < board.GetLength(1); b++)

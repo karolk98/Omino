@@ -64,7 +64,6 @@ namespace tetris_trial
             }
 
             this.blockSet = list;
-            Console.WriteLine(list.Capacity);
         }
     }
 }
