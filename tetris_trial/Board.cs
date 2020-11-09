@@ -10,8 +10,10 @@ namespace tetris_trial
 
         public int[,] FastSquare()
         {
+            if (Blocks is null || Blocks.Count == 0)
+                return null;
             for (int i = (int) Math.Ceiling(Math.Sqrt(Blocks.Count * Blocks.First().Pixels.Count));
-                i < Blocks.Count * Blocks.First().Pixels.Count;
+                i <= Blocks.Sum(b => b.Pixels.Count);
                 i++)
             {
                 var tab = new int[i, i];
@@ -53,9 +55,10 @@ namespace tetris_trial
         
         public int[,] Square()
         {
+            if (Blocks is null || Blocks.Count == 0)
+                return null;
             for (int i = (int) Math.Ceiling(Math.Sqrt(Blocks.Count * Blocks.First().Pixels.Count));
-                i < Blocks.Count *
-                Blocks.First().Pixels.Count;
+                i <= Blocks.Sum(b => b.Pixels.Count);
                 i++)
             {
                 var tab = new int[i, i];
@@ -69,7 +72,7 @@ namespace tetris_trial
             return null;
         }
 
-        public bool SquareRec(int[,] tab, int level)
+        private bool SquareRec(int[,] tab, int level)
         {
             if (level == Blocks.Count)
             {
