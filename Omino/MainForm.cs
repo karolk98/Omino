@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,17 +27,79 @@ namespace Omino
             currentSize = -1;
         }
 
-        public void DrawRectangle(PaintEventArgs e)
+        private void fromFileButton_Click(object sender, System.EventArgs e)
         {
+            CancelRunningTask();
+            if (currentSize != (int) blockSizeBox.Value)
+            {
+                blockSetGenerator = new IncrementalBlockSetGenerator((int)blockSizeBox.Value, new Random().Next());
+                currentSize = (int) blockSizeBox.Value;
+            }
 
-            // Create pen.
-            Pen blackPen = new Pen(Color.Black, 3);
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            DialogResult result = openFileDialog.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK) // Test result.
+            {
+                string file = openFileDialog.FileName;
+                try
+                {
+                    var lines = File.ReadAllLines(file);
+                    for (int i = 0; i < lines.Length; i+=3)
+                    {
+                        List<Block> blocks = new List<Block>();
+                        if(!int.TryParse(lines[i], out int size)) return;
+                        string alg = lines[i + 1];
+                        string input = lines[i + 2];
+                        var numbers = input.Split(' ');
+                        if (numbers.Length == 0)
+                        {
+                            if(!int.TryParse(input, out int count)) return;
+                            blocks = new IncrementalBlockSetGenerator(size, new Random().Next()).GenerateBlocks(count);
+                        }
+                        else
+                        {
+                            switch (size)
+                            {
+                                case 5:
+                                    for (var index = 0; index < numbers.Length; index++)
+                                    {
+                                        var num = numbers[index];
+                                        if(!int.TryParse(num, out int count)) return;
+                                        for (int j = 0; j < count; j++)
+                                        {
+                                            blocks.Add(new PredefinedBlockSet(5).Get(index));
+                                        }                                
+                                    }
+                                    break;
+                                case 6:
+                                    for (var index = 0; index < numbers.Length; index++)
+                                    {
+                                        var num = numbers[index];
+                                        if(!int.TryParse(num, out int count)) return;
+                                        for (int j = 0; j < count; j++)
+                                        {
+                                            blocks.Add(new PredefinedBlockSet(6).Get(index));
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    return;
+                            }
+                        }
+                        board.Blocks = blocks;
+                        break;
+                    }
 
-            // Create rectangle.
-            Rectangle rect = new Rectangle(0, 0, 200, 200);
+                    var bitmap = BitmapGenerator.DrawBlockList(board.Blocks);
 
-            // Draw rectangle to screen.
-            e.Graphics.DrawRectangle(blackPen, rect);
+                    pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
+                    pictureBox.Image = bitmap;
+                }
+                catch (IOException)
+                {
+                    return;
+                }
+            }
         }
 
         private void generateButton_Click(object sender, System.EventArgs e)
