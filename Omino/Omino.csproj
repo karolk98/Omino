@@ -53,6 +53,13 @@
     <Compile Include="BlockForm.Designer.cs">
       <DependentUpon>BlockForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\Block.cs" />
+    <Compile Include="Core\BlockGenerator.cs" />
+    <Compile Include="Core\BlockHash.cs" />
+    <Compile Include="Core\Board.cs" />
+    <Compile Include="Core\IncrementalBlockSetGenerator.cs" />
+    <Compile Include="Core\Pixel.cs" />
+    <Compile Include="Core\PredefinedBlockSet.cs" />
     <Compile Include="Drawing\BitmapGenerator.cs" />
     <Compile Include="Drawing\CLISolutionPrinter.cs" />
     <Compile Include="MainForm.cs">
@@ -90,12 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Omino.Core\Omino.Core.csproj">
-      <Project>{a5d19a94-3b56-4034-ae11-aa91b357f4b6}</Project>
-      <Name>Omino.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

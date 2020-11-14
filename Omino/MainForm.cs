@@ -21,7 +21,6 @@ namespace Omino
         public MainForm()
         {
             InitializeComponent();
-
             BitmapGenerator.PIXEL_SIZE = 40;
             board = new Board();
             _tokenSource = new CancellationTokenSource();
@@ -89,7 +88,6 @@ namespace Omino
                             }
                         }
                         board.Blocks = blocks;
-                        break;
                     }
 
                     var bitmap = BitmapGenerator.DrawBlockList(board.Blocks);

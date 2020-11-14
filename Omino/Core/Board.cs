@@ -255,7 +255,6 @@ namespace Omino.Core
             }
 
             if (level >= cutsDistribution.Length) return false;
-            bool found = false;
             for (int i = 0; i <= cuts; i++)
             {
                 cutsDistribution[level] += i;

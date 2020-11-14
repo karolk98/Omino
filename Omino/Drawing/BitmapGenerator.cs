@@ -31,7 +31,7 @@ namespace Omino.Drawing
                         int y = (1 + pixel.Y) * PIXEL_SIZE;
 
                         var outer = new Rectangle(x, y, PIXEL_SIZE, PIXEL_SIZE);
-                        G.DrawRectangle(new Pen(Color.Black), outer);
+                        G.DrawRectangle(new Pen(Color.LightSeaGreen), outer);
 
                         var inner = new Rectangle(x+BORDER_WIDTH, y + BORDER_WIDTH, PIXEL_SIZE -2*BORDER_WIDTH, PIXEL_SIZE- 2 * BORDER_WIDTH);
                         G.FillRectangle(new SolidBrush(randomColor), inner);
@@ -77,7 +77,7 @@ namespace Omino.Drawing
                         int y = (1 + j) * PIXEL_SIZE;
 
                         var outer = new Rectangle(x, y, PIXEL_SIZE, PIXEL_SIZE);
-                        G.DrawRectangle(new Pen(Color.Black), outer);
+                        G.DrawRectangle(new Pen(Color.LightSeaGreen), outer);
 
                         if (solution[i, j] == -1) continue;
 
