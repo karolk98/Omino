@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace tetris_trial
+namespace Omino.Core
 {
     public class BlockGenerator
     {

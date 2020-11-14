@@ -4,7 +4,7 @@ using System.Diagnostics.PerformanceData;
 using System.Linq;
 using System.Text;
 
-namespace tetris_trial
+namespace Omino.Core
 {
     public class Block
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{A5D19A94-3B56-4034-AE11-AA91B357F4B6}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>tetris_trial</RootNamespace>
-    <AssemblyName>tetris_trial</AssemblyName>
+    <RootNamespace>Omino.Core</RootNamespace>
+    <AssemblyName>Omino.Core</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

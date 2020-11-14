@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Omino.Utils
+namespace Omino.Core
 {
     public class Board
     {
@@ -10,8 +12,15 @@ namespace Omino.Utils
 
         public int[,] FastSquare()
         {
+            return FastSquare(CancellationToken.None);
+        }
+
+        public int[,] FastSquare(CancellationToken token)
+        {
+            if (Blocks is null || Blocks.Count == 0)
+                return null;
             for (int i = (int) Math.Ceiling(Math.Sqrt(Blocks.Count * Blocks.First().Pixels.Count));
-                i < Blocks.Count * Blocks.First().Pixels.Count;
+                i <= Blocks.Sum(b => b.Pixels.Count);
                 i++)
             {
                 var tab = new int[i, i];
@@ -29,6 +38,8 @@ namespace Omino.Utils
                         {
                             for (int b = 0; b < tab.GetLength(0) - rotation.Height + 1; b++)
                             {
+                                if(token.IsCancellationRequested)
+                                    throw new TaskCanceledException();
                                 if (Insert(tab, rotation, a, b, index))
                                 {
                                     placed++;
@@ -43,37 +54,40 @@ namespace Omino.Utils
 
                 if (placed == Blocks.Count)
                 {
-                    PrintSolution(tab, tab.GetLength(0));
                     return tab;
                 }
             }
 
             return null;
         }
-        
         public int[,] Square()
         {
+            return Square(CancellationToken.None);
+        }
+        
+        public int[,] Square(CancellationToken token)
+        {
+            if (Blocks is null || Blocks.Count == 0)
+                return null;
             for (int i = (int) Math.Ceiling(Math.Sqrt(Blocks.Count * Blocks.First().Pixels.Count));
-                i < Blocks.Count *
-                Blocks.First().Pixels.Count;
+                i <= Blocks.Sum(b => b.Pixels.Count);
                 i++)
             {
                 var tab = new int[i, i];
                 for (int a = 0; a < i; a++)
                 for (int b = 0; b < i; b++)
                     tab[a, b] = -1;
-                if (SquareRec(tab, 0))
+                if (SquareRec(tab, 0, token))
                     return tab;
             }
 
             return null;
         }
 
-        public bool SquareRec(int[,] tab, int level)
+        private bool SquareRec(int[,] tab, int level, CancellationToken token)
         {
             if (level == Blocks.Count)
             {
-                PrintSolution(tab, tab.GetLength(0));
                 return true;
             }
 
@@ -83,9 +97,11 @@ namespace Omino.Utils
                 {
                     for (int j = 0; j < tab.GetLength(0) - rotation.Height + 1; j++)
                     {
+                        if(token.IsCancellationRequested)
+                            throw new TaskCanceledException();
                         if (!Insert(tab, rotation, i, j, level)) continue;
 
-                        if (SquareRec(tab, level + 1))
+                        if (SquareRec(tab, level + 1, token))
                             return true;
                         Erase(tab, rotation, i, j);
                     }
@@ -140,6 +156,11 @@ namespace Omino.Utils
 
         public Tuple<int[,], int> Rectangle()
         {
+            return Rectangle(CancellationToken.None);
+        }
+
+        public Tuple<int[,], int> Rectangle(CancellationToken token)
+        {
             int x, y;
             if (Blocks is null || Blocks.Count == 0)
                 return null;
@@ -153,13 +174,18 @@ namespace Omino.Utils
             while (true)
             {
                 int[] cutsDistribution = new int[Blocks.Count];
-                if (RecRectangle(cutsDistribution, 0, cuts, tab))
+                if (RecRectangle(cutsDistribution, 0, cuts, tab, token))
                     return new Tuple<int[,], int>(tab, cuts);
                 cuts++;
             }
         }
-        
+
         public Tuple<int[,], int> FastRectangle()
+        {
+            return FastRectangle(CancellationToken.None);
+        }
+
+        public Tuple<int[,], int> FastRectangle(CancellationToken token)
         {
             if (Blocks is null || Blocks.Count == 0)
                 return null;
@@ -180,6 +206,8 @@ namespace Omino.Utils
                     {
                         for (int b = 0; b < tab.GetLength(1) - rotation.Height + 1; b++)
                         {
+                            if(token.IsCancellationRequested)
+                                throw new TaskCanceledException();
                             if (Insert(tab, rotation, a, b, placed))
                             {
                                 placed++;
@@ -215,16 +243,15 @@ namespace Omino.Utils
                 placed++;
             }
             
-            PrintSolution(tab, cuts);
             return new Tuple<int[,], int>(tab, cuts);
         }
         
-        private bool RecRectangle(int[] cutsDistribution, int level, int cuts, int[,] tab)
+        private bool RecRectangle(int[] cutsDistribution, int level, int cuts, int[,] tab, CancellationToken token)
         {
             if (cuts == 0)
             {
                 var l = new List<Block>();
-                return RecRecRectangle(l, 0, cutsDistribution,tab);
+                return RecRecRectangle(l, 0, cutsDistribution,tab, token);
             }
 
             if (level >= cutsDistribution.Length) return false;
@@ -232,7 +259,7 @@ namespace Omino.Utils
             for (int i = 0; i <= cuts; i++)
             {
                 cutsDistribution[level] += i;
-                if (RecRectangle(cutsDistribution, level + 1, cuts - i, tab))
+                if (RecRectangle(cutsDistribution, level + 1, cuts - i, tab, token))
                 {
                     return true;
                 }
@@ -243,11 +270,11 @@ namespace Omino.Utils
             return false;
         }
 
-        private bool RecRecRectangle(List<Block> l, int level, int[] cutsDistribution, int[,] tab)
+        private bool RecRecRectangle(List<Block> l, int level, int[] cutsDistribution, int[,] tab, CancellationToken token)
         {
             if (level == cutsDistribution.Length)
             {
-                return RecRecRecRectangle(tab, l, 0);
+                return RecRecRecRectangle(tab, l, 0, token);
             }
 
             bool found=false;
@@ -257,7 +284,7 @@ namespace Omino.Utils
             foreach (var option in combinations)
             {
                 l.AddRange(option);
-                if (RecRecRectangle(l, level + 1, cutsDistribution, tab))
+                if (RecRecRectangle(l, level + 1, cutsDistribution, tab, token))
                     found = true;
                 l.RemoveRange(l.Count-option.Count,option.Count);
             }
@@ -265,11 +292,10 @@ namespace Omino.Utils
             return found;
         }
 
-        private bool RecRecRecRectangle(int[,] tab, List<Block> Blocks, int level)
+        private bool RecRecRecRectangle(int[,] tab, List<Block> Blocks, int level, CancellationToken token)
         {
             if (level == Blocks.Count)
             {
-                PrintSolution(tab, 0);
                 return true;
             }
 
@@ -279,6 +305,8 @@ namespace Omino.Utils
                 {
                     for (int j = 0; j < tab.GetLength(1) - rotation.Height + 1; j++)
                     {
+                        if(token.IsCancellationRequested)
+                            throw new TaskCanceledException();
                         if (tab[i, j] != -1)
                         {
                             continue;
@@ -286,7 +314,7 @@ namespace Omino.Utils
 
                         if (!Insert(tab, rotation, i, j, level)) continue;
 
-                        if (RecRecRecRectangle(tab, Blocks,level + 1))
+                        if (RecRecRecRectangle(tab, Blocks,level + 1, token))
                             return true;
                         Erase(tab, rotation, i, j);
                     }
@@ -294,20 +322,6 @@ namespace Omino.Utils
             }
 
             return false;
-        }
-        public static void PrintSolution(int[,] board, int score) 
-        {
-            Console.WriteLine("Found solution! score:" + score);
-            for (int a = 0; a < board.GetLength(0); a++)
-            {
-                for (int b = 0; b < board.GetLength(1); b++)
-                    if (board[a, b] != -1)
-                        Console.Write(board[a, b]);
-                    else
-                        Console.Write("x");
-                
-                Console.WriteLine();
-            }
         }
     }
 }

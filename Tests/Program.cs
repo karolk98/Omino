@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Transactions;
-using tetris_trial;
+using Omino.Core;
 
 namespace Tests
 {
@@ -10,6 +12,8 @@ namespace Tests
     {
         static void Main(string[] args)
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+            Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator = ".";
             Console.WriteLine("Specify block size:");
             if (!int.TryParse(Console.ReadLine(), out int size)) return;
             Console.WriteLine("Specify block count:");
@@ -71,7 +75,7 @@ namespace Tests
             int seed = 0)
         {
             var result = new List<(int, int, List<(Function, float)>)>();
-            IncrementalBlockSetGenerator blockSetGenerator = new IncrementalBlockSetGenerator(blockSize, seed);
+            IncrementalBlockSetGenerator blockSetGenerator = new IncrementalBlockSetGenerator(blockSize, CancellationToken.None, seed);
             for (int bc = 1; bc <= upToBlockCount; bc++)
             {
                 for (int c = 0; c < count; c++)

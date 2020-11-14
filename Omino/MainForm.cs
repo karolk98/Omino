@@ -6,8 +6,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Omino.Utils;
-using Omino.Utils.Drawing;
+using Omino;
+using Omino.Core;
+using Omino.Drawing;
 
 namespace Omino
 {
@@ -30,9 +31,10 @@ namespace Omino
         private void fromFileButton_Click(object sender, System.EventArgs e)
         {
             CancelRunningTask();
+            var token = _tokenSource.Token;
             if (currentSize != (int) blockSizeBox.Value)
             {
-                blockSetGenerator = new IncrementalBlockSetGenerator((int)blockSizeBox.Value, new Random().Next());
+                blockSetGenerator = new IncrementalBlockSetGenerator((int)blockSizeBox.Value,token, new Random().Next());
                 currentSize = (int) blockSizeBox.Value;
             }
 
@@ -54,7 +56,7 @@ namespace Omino
                         if (numbers.Length == 0)
                         {
                             if(!int.TryParse(input, out int count)) return;
-                            blocks = new IncrementalBlockSetGenerator(size, new Random().Next()).GenerateBlocks(count);
+                            blocks = new IncrementalBlockSetGenerator(size, token,new Random().Next()).GenerateBlocks(count);
                         }
                         else
                         {
@@ -105,31 +107,50 @@ namespace Omino
         private void generateButton_Click(object sender, System.EventArgs e)
         {
             CancelRunningTask();
+            var token = _tokenSource.Token;
             if (currentSize != (int) blockSizeBox.Value)
             {
-                blockSetGenerator = new IncrementalBlockSetGenerator((int)blockSizeBox.Value, new Random().Next());
-                currentSize = (int) blockSizeBox.Value;
+                Task task = Task.Factory.StartNew(() =>
+                {
+                    blockSetGenerator = new IncrementalBlockSetGenerator((int)blockSizeBox.Value, token, new Random().Next());
+                }, token).ContinueWith(_ => {
+                    if(token.IsCancellationRequested)
+                        return;
+                    currentSize = (int) blockSizeBox.Value;
+                    board.Blocks = blockSetGenerator.GenerateBlocks((int)blockCountBox.Value);
+
+                    var bitmap = BitmapGenerator.DrawBlockList(board.Blocks);
+
+                    pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
+                    pictureBox.Image = bitmap;
+                }, TaskScheduler.FromCurrentSynchronizationContext());
             }
-            board.Blocks = blockSetGenerator.GenerateBlocks((int)blockCountBox.Value);
+            else
+            {
+                board.Blocks = blockSetGenerator.GenerateBlocks((int)blockCountBox.Value);
 
-            var bitmap = BitmapGenerator.DrawBlockList(board.Blocks);
+                var bitmap = BitmapGenerator.DrawBlockList(board.Blocks);
 
-            pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
-            pictureBox.Image = bitmap;
+                pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
+                pictureBox.Image = bitmap;
+            }
         }
 
         private void optimalSquareButton_Click(object sender, System.EventArgs e)
         {
             CancelRunningTask();
+            var token = _tokenSource.Token;
             if (board.Blocks == null) return;
             var watch = new System.Diagnostics.Stopwatch();
             int[,] result = new int[0,0];
             Task task = Task.Factory.StartNew(() =>
             {
                 watch.Start();
-                result = board.Square();
+                result = board.Square(token);
                 watch.Stop();
-            }, _tokenSource.Token).ContinueWith(_ => {
+            }, token).ContinueWith(_ => {
+                if(token.IsCancellationRequested)
+                    return;
                 var bitmap = BitmapGenerator.DrawSolution(result);
 
                 pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
@@ -142,15 +163,18 @@ namespace Omino
         private void heuristicSquareButton_Click(object sender, System.EventArgs e)
         {
             CancelRunningTask();
+            var token = _tokenSource.Token;
             if (board.Blocks == null) return;
             var watch = new System.Diagnostics.Stopwatch();
             int[,] result = new int[0, 0];
             Task task = Task.Factory.StartNew(() =>
             {
                 watch.Start();
-                result = board.FastSquare();
+                result = board.FastSquare(token);
                 watch.Stop();
-            }, _tokenSource.Token).ContinueWith(_ => {
+            }, token).ContinueWith(_ => {
+                if(token.IsCancellationRequested)
+                    return;
                 var bitmap = BitmapGenerator.DrawSolution(result);
 
                 pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
@@ -163,15 +187,18 @@ namespace Omino
         private void optimalRectangleButton_Click(object sender, System.EventArgs e)
         {
             CancelRunningTask();
+            var token = _tokenSource.Token;
             if (board.Blocks == null) return;
             var watch = new System.Diagnostics.Stopwatch();
             Tuple<int[,], int> result = new Tuple<int[,], int>(new int[0, 0], 0);
             Task task = Task.Factory.StartNew(() =>
             {
                 watch.Start();
-                result = board.Rectangle();
+                result = board.Rectangle(token);
                 watch.Stop();
-            }, _tokenSource.Token).ContinueWith(_ => {
+            }, token).ContinueWith(_ => {
+                if(token.IsCancellationRequested)
+                    return;
                 var bitmap = BitmapGenerator.DrawSolution(result.Item1);
 
                 pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
@@ -184,15 +211,18 @@ namespace Omino
         private void heuristicRectangleButton_Click(object sender, System.EventArgs e)
         {
             CancelRunningTask();
+            var token = _tokenSource.Token;
             if (board.Blocks == null) return;
             var watch = new System.Diagnostics.Stopwatch();
             Tuple<int[,], int> result = new Tuple<int[,], int>(new int[0, 0], 0);
             Task task = Task.Factory.StartNew(() =>
             {
                 watch.Start();
-                result = board.FastRectangle();
+                result = board.FastRectangle(token);
                 watch.Stop();
-            }, _tokenSource.Token).ContinueWith(_ => {
+            }, token).ContinueWith(_ => {
+                if(token.IsCancellationRequested)
+                    return;
                 var bitmap = BitmapGenerator.DrawSolution(result.Item1);
 
                 pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
@@ -208,6 +238,12 @@ namespace Omino
             _tokenSource = new CancellationTokenSource();
             labelInfo1.Text = "";
             labelInfo2.Text = "";
+        }
+
+        private void addBlock_Click(object sender, EventArgs e)
+        {
+            var formPopup = new Form();
+            formPopup.Show(this);
         }
     }
 }

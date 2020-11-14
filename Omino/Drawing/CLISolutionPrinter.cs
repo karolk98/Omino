@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 
-namespace Omino_cli
+namespace Omino.Drawing
 {
-    public class SolutionPrinter
+    public class CLISolutionPrinter
     {
         private const char TOP_LEFT = '╔';
         private const char BOTTOM_LEFT = '╚';
@@ -21,7 +21,6 @@ namespace Omino_cli
             '#',
             '$',
             'W'
-            
         };
 
         private struct CharConfig
@@ -49,11 +48,11 @@ namespace Omino_cli
 
         private static CharConfig GetCharConfig(int i)
         {
-            int config_id = new Random(i).Next(1024);
-            bool reverse_colors = (config_id & 0b10_0000_0000) == 1;
-            int foreground = config_id & 0b111;
-            int background = (config_id >> 3) & 0b111;
-            int character = (config_id >> 6) & 0b111;
+            Random random = new Random(i);
+            bool reverse_colors = random.Next(2)==0;
+            int foreground = random.Next(8);
+            int background = random.Next(8);
+            int character = random.Next(8);
             CharConfig config =
             new CharConfig {
                 character = CHARS[character],

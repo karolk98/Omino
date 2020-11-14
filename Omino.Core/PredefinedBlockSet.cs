@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace tetris_trial
+namespace Omino.Core
 {
     public class PredefinedBlockSet
     {

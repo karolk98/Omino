@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Omino.Utils
+namespace Omino.Core
 {
     public struct Pixel
     {

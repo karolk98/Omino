@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace tetris_trial
+namespace Omino.Core
 {
     public class IncrementalBlockSetGenerator
     {
@@ -34,7 +36,7 @@ namespace tetris_trial
             return blocks;
         }
         
-        public IncrementalBlockSetGenerator(int size, int seed=0)
+        public IncrementalBlockSetGenerator(int size, CancellationToken token, int seed=0)
         {
             _random = new Random(seed);
             List<Block> list = INITIAL;
@@ -48,6 +50,8 @@ namespace tetris_trial
                     {
                         foreach (var move in moves)
                         {
+                            if(token.IsCancellationRequested)
+                                throw new TaskCanceledException();
                             if (!block.Pixels.Contains(new Pixel(pixel.X+move.Item1, pixel.Y+move.Item2)))
                             {
                                 var l = new List<Pixel>(block.Pixels)

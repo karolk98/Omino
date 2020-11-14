@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\tetris_trial\tetris_trial.csproj" />
+    <ProjectReference Include="..\Omino.Core\Omino.Core.csproj" />
   </ItemGroup>
 
 </Project>
