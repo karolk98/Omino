@@ -240,7 +240,7 @@ namespace Omino
 
         private void addBlock_Click(object sender, EventArgs e)
         {
-            var formPopup = new Form();
+            var formPopup = new BlockForm();
             formPopup.Show(this);
         }
     }
