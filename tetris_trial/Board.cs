@@ -45,7 +45,6 @@ namespace tetris_trial
 
                 if (placed == Blocks.Count)
                 {
-                    PrintSolution(tab);
                     return tab;
                 }
             }
@@ -76,7 +75,6 @@ namespace tetris_trial
         {
             if (level == Blocks.Count)
             {
-                PrintSolution(tab);
                 return true;
             }
 
@@ -218,7 +216,6 @@ namespace tetris_trial
                 placed++;
             }
             
-            PrintSolution(tab);
             return new Tuple<int[,], int>(tab, cuts);
         }
         
@@ -272,7 +269,6 @@ namespace tetris_trial
         {
             if (level == Blocks.Count)
             {
-                PrintSolution(tab);
                 return true;
             }
 
@@ -297,19 +293,6 @@ namespace tetris_trial
             }
 
             return false;
-        }
-        public static void PrintSolution(int[,] board) 
-        {
-            for (int a = 0; a < board.GetLength(0); a++)
-            {
-                for (int b = 0; b < board.GetLength(1); b++)
-                    if (board[a, b] != -1)
-                        Console.Write(board[a, b]);
-                    else
-                        Console.Write("x");
-                
-                Console.WriteLine();
-            }
         }
     }
 }

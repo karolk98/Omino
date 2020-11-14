@@ -64,6 +64,7 @@ namespace Omino_cli
                     case 1:
                     {
                         var result = board.Square();
+                        SolutionPrinter.PrintSolution(result);
                         Console.WriteLine($"Found square size: {result.GetLength(0)}x{result.GetLength(0)}");
                         break;
                     }
@@ -71,18 +72,21 @@ namespace Omino_cli
                     case 2:
                     {
                         var result = board.FastSquare();
+                        SolutionPrinter.PrintSolution(result);
                         Console.WriteLine($"Found square size: {result.GetLength(0)}x{result.GetLength(0)}");
                         break;
                     }
                     case 3:
                     {
                         var result = board.Rectangle();
+                        SolutionPrinter.PrintSolution(result.Item1);
                         Console.WriteLine($"Found rectangle, cuts: {result.Item2}");
                         break;
                     }
                     case 4:
                     {
                         var result = board.FastRectangle();
+                        SolutionPrinter.PrintSolution(result.Item1);
                         Console.WriteLine($"Found rectangle, cuts: {result.Item2}");
                         break;
                     }
@@ -102,7 +106,7 @@ namespace Omino_cli
                     string alg = lines[i + 1];
                     string input = lines[i + 2];
                     var numbers = input.Split(' ');
-                    if (numbers.Length == 0)
+                    if (numbers.Length == 1)
                     {
                         if(!int.TryParse(input, out int count)) return 1;
                         blocks = new IncrementalBlockSetGenerator(size, new Random().Next()).GenerateBlocks(count);
@@ -144,6 +148,7 @@ namespace Omino_cli
                         case "ok":
                         {
                             var result = board.Square();
+                            SolutionPrinter.PrintSolution(result);
                             Console.WriteLine($"Found square size: {result.GetLength(0)}x{result.GetLength(0)}");
                             break;
                         }
@@ -151,18 +156,21 @@ namespace Omino_cli
                         case "hk":
                         {
                             var result = board.FastSquare();
+                            SolutionPrinter.PrintSolution(result);
                             Console.WriteLine($"Found square size: {result.GetLength(0)}x{result.GetLength(0)}");
                             break;
                         }
                         case "op":
                         {
                             var result = board.Rectangle();
+                            SolutionPrinter.PrintSolution(result.Item1);
                             Console.WriteLine($"Found rectangle, cuts: {result.Item2}");
                             break;
                         }
                         case "hp":
                         {
                             var result = board.FastRectangle();
+                            SolutionPrinter.PrintSolution(result.Item1);
                             Console.WriteLine($"Found rectangle, cuts: {result.Item2}");
                             break;
                         }

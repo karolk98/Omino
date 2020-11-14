@@ -8,8 +8,8 @@ namespace tetris_trial
         {
             IncrementalBlockSetGenerator blockSetGenerator = new IncrementalBlockSetGenerator(4, 5);
             Board board = new Board();
-            board.Blocks = blockSetGenerator.GenerateBlocks(11);
-            Console.WriteLine(board.Rectangle());
+            board.Blocks = blockSetGenerator.GenerateBlocks(9);
+            Console.WriteLine(board.Square());
         }
     }
 }
