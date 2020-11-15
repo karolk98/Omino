@@ -13,7 +13,7 @@ namespace Omino.Drawing
         public static Bitmap DrawBlockList(List<Block> blocks)
         {
             int width = PIXEL_SIZE * (blocks.Sum(item => item.Width) + blocks.Count + 1);
-            int height = PIXEL_SIZE * (blocks.Max(item => item.Height) + 2);
+            int height = PIXEL_SIZE * ((blocks.Max(item => (int?)item.Height) ?? 0) + 2);
             var bitmap = new Bitmap(width, height);
 
             int currentPosition = 1;
