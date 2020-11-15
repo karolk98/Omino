@@ -29,16 +29,24 @@ namespace Tests
             WriteHeaders(w, testMethods);
             for (int s = 1; s <= size; s++)
             {
-                var tests = ConductTest(s, count, testCount,
-                    testMethods);
-                foreach (var test in tests)
+                Console.WriteLine($"Starting tests for block size {s}");
+                IncrementalBlockSetGenerator blockSetGenerator =
+                    new IncrementalBlockSetGenerator(size, CancellationToken.None);
+                for (int bc = 1; bc <= count; bc++)
                 {
-                    WriteTest(w, test.blockSize, test.blockCount, test.results);
+                    var tests = ConductTest(blockSetGenerator, s, bc, testCount,
+                        testMethods);
+                    
+                    foreach (var test in tests)
+                    {
+                        WriteTest(w, test.blockSize, test.blockCount, test.results);
+                    }
                 }
             }
         }
 
-        private static void WriteTest(StreamWriter writer, int blockSize, int blockCount, List<(Function, float time)> results)
+        private static void WriteTest(StreamWriter writer, int blockSize, int blockCount,
+            List<(Function, float time)> results)
         {
             var line = $"{blockSize},{blockCount}";
             foreach (var fun in results)
@@ -49,6 +57,7 @@ namespace Tests
             writer.WriteLine(line);
             writer.Flush();
         }
+
         private static void WriteHeaders(StreamWriter writer, List<Function> testMethods)
         {
             var headers = "BlockSize,BlockCount";
@@ -56,10 +65,11 @@ namespace Tests
             {
                 headers += $",{method.ToString()}";
             }
-            
+
             writer.WriteLine(headers);
             writer.Flush();
         }
+
         private enum Function
         {
             Square,
@@ -69,31 +79,30 @@ namespace Tests
         };
 
         private static List<(int blockSize, int blockCount, List<(Function method, float time)> results)> ConductTest(
+            IncrementalBlockSetGenerator blockSetGenerator,
             int blockSize,
-            int upToBlockCount,
-            int count, List<Function> methods,
-            int seed = 0)
+            int blockCount,
+            int count, List<Function> methods)
         {
             var result = new List<(int, int, List<(Function, float)>)>();
-            IncrementalBlockSetGenerator blockSetGenerator = new IncrementalBlockSetGenerator(blockSize, CancellationToken.None, seed);
-            for (int bc = 1; bc <= upToBlockCount; bc++)
+            for (int c = 1; c <= count; c++)
             {
-                for (int c = 0; c < count; c++)
+                Console.WriteLine($"Running test {c}/{count} - size: {blockSize}, blockCount: {blockCount}");
+                var blocks = blockSetGenerator.GenerateBlocks(blockCount);
+                var board = new Board();
+                board.Blocks = blocks;
+
+                var tmpResults = new List<(Function, float)>();
+
+                foreach (var method in methods)
                 {
-                    var blocks = blockSetGenerator.GenerateBlocks(bc);
-                    var board = new Board();
-                    board.Blocks = blocks;
-
-                    var tmpResults = new List<(Function, float)>();
-
-                    foreach (var method in methods)
-                    {
-                        var time = MeasureTime(board, method);
-                        tmpResults.Add((method, time));
-                    }
-                    result.Add((blockSize, bc, tmpResults));
+                    var time = MeasureTime(board, method);
+                    tmpResults.Add((method, time));
                 }
+
+                result.Add((blockSize, blockCount, tmpResults));
             }
+
             return result;
         }
 
@@ -126,7 +135,7 @@ namespace Tests
                     throw new ArgumentOutOfRangeException();
             }
 
-            return (float)watch.Elapsed.TotalMilliseconds;
+            return (float) watch.Elapsed.TotalMilliseconds;
         }
     }
 }
