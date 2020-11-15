@@ -98,7 +98,7 @@ namespace Omino.Drawing
                 Console.Write(LEFT_RIGHT);
                 for (int j = 0; j < board_width; j++)
                 {
-                    int id = board[i, j];
+                    int id = board[j, i];
                     if (id == -1)
                     {
                         Console.Write("  ");
