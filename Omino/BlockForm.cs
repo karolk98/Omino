@@ -56,13 +56,9 @@ namespace Omino
 
             var block = ParseBlock();
 
-            if (block.Split(new List<Cut>()).Count != 1)
-            {
-                errorLabel.Text = "Invalid block!";
-                return;
-            }
+            var blocks = block.Split(new List<Cut>());
 
-            _board.Blocks.Add(block);
+            _board.Blocks.AddRange(blocks);
             this.Close();
         }
 
