@@ -31,6 +31,7 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.deleteButton = new System.Windows.Forms.Button();
             this.addBlock = new System.Windows.Forms.Button();
             this.labelInfo2 = new System.Windows.Forms.Label();
             this.labelInfo1 = new System.Windows.Forms.Label();
@@ -70,6 +71,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.BackColor = System.Drawing.Color.DodgerBlue;
+            this.splitContainer1.Panel2.Controls.Add(this.deleteButton);
             this.splitContainer1.Panel2.Controls.Add(this.addBlock);
             this.splitContainer1.Panel2.Controls.Add(this.labelInfo2);
             this.splitContainer1.Panel2.Controls.Add(this.labelInfo1);
@@ -83,7 +85,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.optimalSquareButton);
             this.splitContainer1.Panel2.Controls.Add(this.generateButton);
             this.splitContainer1.Panel2.Controls.Add(this.fromFile);
-            this.splitContainer1.Size = new System.Drawing.Size(1262, 736);
+            this.splitContainer1.Size = new System.Drawing.Size(1262, 771);
             this.splitContainer1.SplitterDistance = 928;
             this.splitContainer1.SplitterWidth = 8;
             this.splitContainer1.TabIndex = 0;
@@ -99,11 +101,24 @@
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
             // 
+            // deleteButton
+            // 
+            this.deleteButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.deleteButton.BackColor = System.Drawing.Color.MidnightBlue;
+            this.deleteButton.Location = new System.Drawing.Point(85, 385);
+            this.deleteButton.Margin = new System.Windows.Forms.Padding(6);
+            this.deleteButton.Name = "deleteButton";
+            this.deleteButton.Size = new System.Drawing.Size(150, 46);
+            this.deleteButton.TabIndex = 15;
+            this.deleteButton.Text = "Delete Last";
+            this.deleteButton.UseVisualStyleBackColor = false;
+            this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
+            // 
             // addBlock
             // 
             this.addBlock.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.addBlock.BackColor = System.Drawing.Color.MidnightBlue;
-            this.addBlock.Location = new System.Drawing.Point(89, 326);
+            this.addBlock.Location = new System.Drawing.Point(85, 327);
             this.addBlock.Margin = new System.Windows.Forms.Padding(6);
             this.addBlock.Name = "addBlock";
             this.addBlock.Size = new System.Drawing.Size(150, 46);
@@ -117,7 +132,7 @@
             this.labelInfo2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.labelInfo2.AutoSize = true;
             this.labelInfo2.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.labelInfo2.Location = new System.Drawing.Point(50, 453);
+            this.labelInfo2.Location = new System.Drawing.Point(53, 498);
             this.labelInfo2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelInfo2.Name = "labelInfo2";
             this.labelInfo2.Size = new System.Drawing.Size(0, 27);
@@ -129,7 +144,7 @@
             this.labelInfo1.AutoSize = true;
             this.labelInfo1.BackColor = System.Drawing.Color.DodgerBlue;
             this.labelInfo1.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.labelInfo1.Location = new System.Drawing.Point(50, 401);
+            this.labelInfo1.Location = new System.Drawing.Point(53, 446);
             this.labelInfo1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelInfo1.Name = "labelInfo1";
             this.labelInfo1.Size = new System.Drawing.Size(0, 27);
@@ -140,7 +155,7 @@
             this.blockCountBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.blockCountBox.BackColor = System.Drawing.Color.MidnightBlue;
             this.blockCountBox.ForeColor = System.Drawing.Color.LightSeaGreen;
-            this.blockCountBox.Location = new System.Drawing.Point(42, 201);
+            this.blockCountBox.Location = new System.Drawing.Point(38, 204);
             this.blockCountBox.Margin = new System.Windows.Forms.Padding(6);
             this.blockCountBox.Name = "blockCountBox";
             this.blockCountBox.Size = new System.Drawing.Size(240, 34);
@@ -153,7 +168,7 @@
             this.blockSizeBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.blockSizeBox.BackColor = System.Drawing.Color.MidnightBlue;
             this.blockSizeBox.ForeColor = System.Drawing.Color.LightSeaGreen;
-            this.blockSizeBox.Location = new System.Drawing.Point(42, 120);
+            this.blockSizeBox.Location = new System.Drawing.Point(38, 123);
             this.blockSizeBox.Margin = new System.Windows.Forms.Padding(6);
             this.blockSizeBox.Name = "blockSizeBox";
             this.blockSizeBox.Size = new System.Drawing.Size(240, 34);
@@ -166,7 +181,7 @@
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.label2.Location = new System.Drawing.Point(34, 166);
+            this.label2.Location = new System.Drawing.Point(30, 169);
             this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(127, 27);
@@ -178,7 +193,7 @@
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.label1.Location = new System.Drawing.Point(34, 85);
+            this.label1.Location = new System.Drawing.Point(30, 88);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(106, 27);
@@ -189,7 +204,7 @@
             // 
             this.heuristicRectangleButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.heuristicRectangleButton.BackColor = System.Drawing.Color.MidnightBlue;
-            this.heuristicRectangleButton.Location = new System.Drawing.Point(27, 666);
+            this.heuristicRectangleButton.Location = new System.Drawing.Point(30, 711);
             this.heuristicRectangleButton.Margin = new System.Windows.Forms.Padding(6);
             this.heuristicRectangleButton.Name = "heuristicRectangleButton";
             this.heuristicRectangleButton.Size = new System.Drawing.Size(268, 48);
@@ -202,7 +217,7 @@
             // 
             this.optimalRectangleButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.optimalRectangleButton.BackColor = System.Drawing.Color.MidnightBlue;
-            this.optimalRectangleButton.Location = new System.Drawing.Point(27, 606);
+            this.optimalRectangleButton.Location = new System.Drawing.Point(30, 651);
             this.optimalRectangleButton.Margin = new System.Windows.Forms.Padding(6);
             this.optimalRectangleButton.Name = "optimalRectangleButton";
             this.optimalRectangleButton.Size = new System.Drawing.Size(268, 48);
@@ -215,7 +230,7 @@
             // 
             this.heuristicSquareButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.heuristicSquareButton.BackColor = System.Drawing.Color.MidnightBlue;
-            this.heuristicSquareButton.Location = new System.Drawing.Point(27, 548);
+            this.heuristicSquareButton.Location = new System.Drawing.Point(30, 593);
             this.heuristicSquareButton.Margin = new System.Windows.Forms.Padding(6);
             this.heuristicSquareButton.Name = "heuristicSquareButton";
             this.heuristicSquareButton.Size = new System.Drawing.Size(268, 48);
@@ -228,7 +243,7 @@
             // 
             this.optimalSquareButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.optimalSquareButton.BackColor = System.Drawing.Color.MidnightBlue;
-            this.optimalSquareButton.Location = new System.Drawing.Point(27, 486);
+            this.optimalSquareButton.Location = new System.Drawing.Point(30, 531);
             this.optimalSquareButton.Margin = new System.Windows.Forms.Padding(6);
             this.optimalSquareButton.Name = "optimalSquareButton";
             this.optimalSquareButton.Size = new System.Drawing.Size(268, 48);
@@ -241,7 +256,7 @@
             // 
             this.generateButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.generateButton.BackColor = System.Drawing.Color.MidnightBlue;
-            this.generateButton.Location = new System.Drawing.Point(89, 264);
+            this.generateButton.Location = new System.Drawing.Point(85, 267);
             this.generateButton.Margin = new System.Windows.Forms.Padding(6);
             this.generateButton.Name = "generateButton";
             this.generateButton.Size = new System.Drawing.Size(150, 48);
@@ -254,7 +269,7 @@
             // 
             this.fromFile.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.fromFile.BackColor = System.Drawing.Color.MidnightBlue;
-            this.fromFile.Location = new System.Drawing.Point(89, 24);
+            this.fromFile.Location = new System.Drawing.Point(83, 17);
             this.fromFile.Margin = new System.Windows.Forms.Padding(6);
             this.fromFile.Name = "fromFile";
             this.fromFile.Size = new System.Drawing.Size(150, 48);
@@ -268,9 +283,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(1262, 736);
+            this.ClientSize = new System.Drawing.Size(1262, 771);
             this.Controls.Add(this.splitContainer1);
-            this.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, ((System.Drawing.FontStyle) ((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte) (238)));
+            this.Font = new System.Drawing.Font("Comic Sans MS", 14.25F,
+                ((System.Drawing.FontStyle) ((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))),
+                System.Drawing.GraphicsUnit.Point, ((byte) (238)));
             this.ForeColor = System.Drawing.Color.LightSeaGreen;
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "MainForm";
@@ -305,5 +322,6 @@
         private System.Windows.Forms.Label labelInfo2;
         private System.Windows.Forms.Label labelInfo1;
         private System.Windows.Forms.Button addBlock;
+        private System.Windows.Forms.Button deleteButton;
     }
 }

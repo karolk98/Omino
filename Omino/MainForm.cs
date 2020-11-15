@@ -246,11 +246,6 @@ namespace Omino
             formPopup.FormClosed += enable_this;
             formPopup.Show(this);
             this.Enabled = false;
-
-            //var bitmap = BitmapGenerator.DrawBlockList(board.Blocks);
-
-            //pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
-            //pictureBox.Image = bitmap;
         }
 
         private void enable_this(object sender, System.EventArgs e)
@@ -260,6 +255,18 @@ namespace Omino
 
             pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
             pictureBox.Image = bitmap;
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            if (board.Blocks != null && board.Blocks.Count > 0)
+            {
+                this.board.Blocks.RemoveAt(board.Blocks.Count - 1);
+                var bitmap = BitmapGenerator.DrawBlockList(board.Blocks);
+
+                pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
+                pictureBox.Image = bitmap;
+            }
         }
     }
 }
