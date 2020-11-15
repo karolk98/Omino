@@ -240,8 +240,24 @@ namespace Omino
 
         private void addBlock_Click(object sender, EventArgs e)
         {
-            var formPopup = new BlockForm();
+            var formPopup = new BlockForm(board);
+            formPopup.FormClosed += enable_this;
             formPopup.Show(this);
+            this.Enabled = false;
+
+            //var bitmap = BitmapGenerator.DrawBlockList(board.Blocks);
+
+            //pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
+            //pictureBox.Image = bitmap;
+        }
+
+        private void enable_this(object sender, System.EventArgs e)
+        {
+            this.Enabled = true;
+            var bitmap = BitmapGenerator.DrawBlockList(board.Blocks);
+
+            pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
+            pictureBox.Image = bitmap;
         }
     }
 }
