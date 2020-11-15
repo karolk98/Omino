@@ -49,11 +49,6 @@ namespace Omino
 
         private void addButton_Click(object sender, EventArgs e)
         {
-            if(_board.Blocks is null)
-            {
-                _board.Blocks = new List<Block>();
-            }
-
             var block = ParseBlock();
 
             var blocks = block.Split(new List<Cut>());

@@ -240,6 +240,11 @@ namespace Omino
 
         private void addBlock_Click(object sender, EventArgs e)
         {
+            if(board.Blocks is null)
+            {
+                board.Blocks = new List<Block>();
+            }
+
             var formPopup = new BlockForm(board);
             formPopup.FormClosed += enable_this;
             formPopup.Show(this);
