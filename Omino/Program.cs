@@ -79,25 +79,28 @@ namespace Omino
                     {
                         case "ok":
                         {
+                            Console.WriteLine("Running optimal square algorithm:");
                             sw.Start();
                             var result = board.Square();
                             sw.Stop();
                             CLISolutionPrinter.PrintSolution(result);
-                            Console.WriteLine($"Found square size: {result.GetLength(0)}x{result.GetLength(0)}, time: {sw.ElapsedMilliseconds} ms");
+                            Console.WriteLine($"Found square size: {result.GetLength(0)}x{result.GetLength(0)}, time: {sw.ElapsedMilliseconds} ms\n");
                             break;
                         }
 
                         case "hk":
                         {
+                            Console.WriteLine("Running heuristic square algorithm:");
                             sw.Start();
                             var result = board.FastSquare();
                             sw.Stop();
                             CLISolutionPrinter.PrintSolution(result);
-                            Console.WriteLine($"Found square size: {result.GetLength(0)}x{result.GetLength(0)}, time: {sw.ElapsedMilliseconds} ms");
+                            Console.WriteLine($"Found square size: {result.GetLength(0)}x{result.GetLength(0)}, time: {sw.ElapsedMilliseconds} ms\n");
                             break;
                         }
                         case "op":
                         {
+                            Console.WriteLine("Running optimal rectangle algorithm:");
                             sw.Start();
                             var result = board.Rectangle();
                             sw.Stop();
@@ -107,11 +110,12 @@ namespace Omino
                         }
                         case "hp":
                         {
+                            Console.WriteLine("Running heuristic rectangle algorithm:");
                             sw.Start();
                             var result = board.FastRectangle();
                             sw.Stop();
                             CLISolutionPrinter.PrintSolution(result.Item1);
-                            Console.WriteLine($"Found rectangle, cuts: {result.Item2}, time: {sw.ElapsedMilliseconds} ms");
+                            Console.WriteLine($"Found rectangle, cuts: {result.Item2}, time: {sw.ElapsedMilliseconds} ms\n");
                             break;
                         }
                         default:
