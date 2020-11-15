@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -73,35 +74,44 @@ namespace Omino
                     }
                     Board board = new Board();
                     board.Blocks = blocks;
+                    Stopwatch sw = new Stopwatch();
                     switch (alg)
                     {
                         case "ok":
                         {
+                            sw.Start();
                             var result = board.Square();
+                            sw.Stop();
                             CLISolutionPrinter.PrintSolution(result);
-                            Console.WriteLine($"Found square size: {result.GetLength(0)}x{result.GetLength(0)}");
+                            Console.WriteLine($"Found square size: {result.GetLength(0)}x{result.GetLength(0)}, time: {sw.ElapsedMilliseconds} ms");
                             break;
                         }
 
                         case "hk":
                         {
+                            sw.Start();
                             var result = board.FastSquare();
+                            sw.Stop();
                             CLISolutionPrinter.PrintSolution(result);
-                            Console.WriteLine($"Found square size: {result.GetLength(0)}x{result.GetLength(0)}");
+                            Console.WriteLine($"Found square size: {result.GetLength(0)}x{result.GetLength(0)}, time: {sw.ElapsedMilliseconds} ms");
                             break;
                         }
                         case "op":
                         {
+                            sw.Start();
                             var result = board.Rectangle();
+                            sw.Stop();
                             CLISolutionPrinter.PrintSolution(result.Item1);
-                            Console.WriteLine($"Found rectangle, cuts: {result.Item2}");
+                            Console.WriteLine($"Found rectangle, cuts: {result.Item2}, time: {sw.ElapsedMilliseconds} ms");
                             break;
                         }
                         case "hp":
                         {
+                            sw.Start();
                             var result = board.FastRectangle();
+                            sw.Stop();
                             CLISolutionPrinter.PrintSolution(result.Item1);
-                            Console.WriteLine($"Found rectangle, cuts: {result.Item2}");
+                            Console.WriteLine($"Found rectangle, cuts: {result.Item2}, time: {sw.ElapsedMilliseconds} ms");
                             break;
                         }
                         default:
