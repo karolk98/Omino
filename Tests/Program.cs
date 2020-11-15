@@ -18,11 +18,11 @@ namespace Tests
             if (!int.TryParse(Console.ReadLine(), out int size)) return;
             Console.WriteLine("Specify block count:");
             if (!int.TryParse(Console.ReadLine(), out int count)) return;
-            Console.WriteLine("Specify tests count:");
+            Console.WriteLine("Specify tests count >= 3:");
             if (!int.TryParse(Console.ReadLine(), out int testCount)) return;
             Console.WriteLine("Specify result path:");
             var path = Console.ReadLine();
-
+            testCount = Math.Max(testCount, 3);
             var testMethods = new List<Function>
                 {Function.Square, Function.FastSquare, Function.Rectangle, Function.FastRectangle};
             using var w = new StreamWriter(path);
@@ -41,10 +41,45 @@ namespace Tests
                     {
                         WriteTest(w, test.blockSize, test.blockCount, test.results);
                     }
+                    var analyzed = AnalyseTests(tests, testMethods);
+                    w.WriteLine("Means:");
+                    w.Flush();
+                    WriteTest(w, s, bc, analyzed);
+                    
+                    w.WriteLine("");
+                    w.Flush();
                 }
             }
         }
 
+
+        private static List<(Function method, float time)> AnalyseTests(
+            List<(int blockSize, int blockCount, List<(Function method, float time)> results)> tests, List<Function> methods)
+        {
+            var result = new List<(Function method, float time)>();
+            foreach (var method in methods)
+            {
+                var tmpList = new List<float>();
+                foreach (var test in tests)
+                {
+                    var time = test.results.Find(x => x.method == method).time;
+                    tmpList.Add(time);
+                }
+
+                tmpList.Sort();
+                var mean = 0f;
+                for (int i = 1; i < tmpList.Count - 1; i++) // skip first and last element
+                {
+                    mean += tmpList[i];
+                }
+
+                mean /= tmpList.Count - 2;
+                result.Add((method, mean));
+            }
+
+            return result;
+        }
+        
         private static void WriteTest(StreamWriter writer, int blockSize, int blockCount,
             List<(Function, float time)> results)
         {
