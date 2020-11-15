@@ -39,67 +39,63 @@ namespace Omino
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
             DialogResult result = openFileDialog.ShowDialog(); // Show the dialog.
-            if (result == DialogResult.OK) // Test result.
+            if (result != DialogResult.OK) return;
+            string file = openFileDialog.FileName;
+            try
             {
-                string file = openFileDialog.FileName;
-                try
+                var lines = File.ReadAllLines(file);
+                for (int i = 0; i < lines.Length; )
                 {
-                    var lines = File.ReadAllLines(file);
-                    for (int i = 0; i < lines.Length; i+=3)
+                    List<Block> blocks = new List<Block>();
+                    if(!int.TryParse(lines[i], out int size)) return;
+                    string alg = lines[i + 1];
+                    string input = lines[i + 2];
+                    var numbers = input.Split(' ');
+                    if (numbers.Length == 1)
                     {
-                        List<Block> blocks = new List<Block>();
-                        if(!int.TryParse(lines[i], out int size)) return;
-                        string alg = lines[i + 1];
-                        string input = lines[i + 2];
-                        var numbers = input.Split(' ');
-                        if (numbers.Length == 0)
-                        {
-                            if(!int.TryParse(input, out int count)) return;
-                            blocks = new IncrementalBlockSetGenerator(size, token,new Random().Next()).GenerateBlocks(count);
-                        }
-                        else
-                        {
-                            switch (size)
-                            {
-                                case 5:
-                                    for (var index = 0; index < numbers.Length; index++)
-                                    {
-                                        var num = numbers[index];
-                                        if(!int.TryParse(num, out int count)) return;
-                                        for (int j = 0; j < count; j++)
-                                        {
-                                            blocks.Add(new PredefinedBlockSet(5).Get(index));
-                                        }                                
-                                    }
-                                    break;
-                                case 6:
-                                    for (var index = 0; index < numbers.Length; index++)
-                                    {
-                                        var num = numbers[index];
-                                        if(!int.TryParse(num, out int count)) return;
-                                        for (int j = 0; j < count; j++)
-                                        {
-                                            blocks.Add(new PredefinedBlockSet(6).Get(index));
-                                        }
-                                    }
-                                    break;
-                                default:
-                                    return;
-                            }
-                        }
-                        board.Blocks = blocks;
+                        if(!int.TryParse(input, out int count)) return;
+                        blocks = new IncrementalBlockSetGenerator(size, token,new Random().Next()).GenerateBlocks(count);
                     }
-
-                    var bitmap = BitmapGenerator.DrawBlockList(board.Blocks);
-
-                    pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
-                    pictureBox.Image = bitmap;
+                    else
+                    {
+                        switch (size)
+                        {
+                            case 5:
+                                for (var index = 0; index < numbers.Length; index++)
+                                {
+                                    var num = numbers[index];
+                                    if(!int.TryParse(num, out int count)) return;
+                                    for (int j = 0; j < count; j++)
+                                    {
+                                        blocks.Add(new PredefinedBlockSet(5).Get(index));
+                                    }                                
+                                }
+                                break;
+                            case 6:
+                                for (var index = 0; index < numbers.Length; index++)
+                                {
+                                    var num = numbers[index];
+                                    if(!int.TryParse(num, out int count)) return;
+                                    for (int j = 0; j < count; j++)
+                                    {
+                                        blocks.Add(new PredefinedBlockSet(6).Get(index));
+                                    }
+                                }
+                                break;
+                            default:
+                                return;
+                        }
+                    }
+                    board.Blocks = blocks;
+                    break;
                 }
-                catch (IOException)
-                {
-                    return;
-                }
+
+                var bitmap = BitmapGenerator.DrawBlockList(board.Blocks);
+
+                pictureBox.ClientSize = new Size(bitmap.Width, bitmap.Height);
+                pictureBox.Image = bitmap;
             }
+            catch (IOException) { }
         }
 
         private void generateButton_Click(object sender, System.EventArgs e)
