@@ -24,7 +24,7 @@ namespace Tests
             var path = Console.ReadLine();
             testCount = Math.Max(testCount, 3);
             var testMethods = new List<Function>
-                {Function.FastSquare, Function.FastRectangle};
+                {Function.Square, Function.FastSquare, Function.Rectangle, Function.FastRectangle};
             using var w = new StreamWriter(path);
             WriteHeaders(w, testMethods);
             for (int s = 1; s <= size; s++)
@@ -39,14 +39,14 @@ namespace Tests
                     
                     foreach (var test in tests)
                     {
-//                        WriteTest(w, test.blockSize, test.blockCount, test.results);
+                        WriteTest(w, test.blockSize, test.blockCount, test.results);
                     }
                     var analyzed = AnalyseTests(tests, testMethods);
-//                    w.WriteLine("Means:");
-//                    w.Flush();
+                    w.WriteLine("Means:");
+                    w.Flush();
                     WriteTest(w, s, bc, analyzed);
                     
-//                    w.WriteLine("");
+                    w.WriteLine("");
                     w.Flush();
                 }
             }
